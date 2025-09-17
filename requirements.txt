@@ -1,0 +1,16 @@
+# Python TCP Server-Client Network Communication
+# No external dependencies required - uses only Python standard library
+
+# Standard library modules used:
+# - socket: TCP networking
+# - threading: Concurrent client handling
+# - http.server: HTTP server functionality
+# - json: JSON response formatting
+# - sys: System-specific parameters and functions
+# - time: Time-related functions
+
+# Python version requirement:
+# Python 3.6 or higher (for f-string formatting)
+
+# To verify your Python version:
+# python3 --version
