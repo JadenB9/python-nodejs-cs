@@ -25,8 +25,7 @@ python3 server.py   # TCP 7777, HTTP 3001 — standard library only
 python3 client.py
 ```
 
-You can run both servers at once on their own ports. The `ClientServer/`
-folder has a slightly earlier draft I kept around.
+You can run both servers at once on their own ports.
 
 ## Notes
 

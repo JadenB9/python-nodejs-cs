@@ -5,6 +5,9 @@
 .env.local
 .env.production
 
+# separate side project, lives in its own repo
+ClientServer/
+
 # IDE
 .vscode/
 .idea/
