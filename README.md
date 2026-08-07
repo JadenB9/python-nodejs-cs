@@ -12,7 +12,6 @@ line, echo anything the client sends, and tear down cleanly on `quit`.
 ### Node.js version
 
 ```bash
-cd Networks
 npm install
 node server.js      # listens on TCP 6666 (and an Express HTTP route on 3000)
 node client.js      # interactive client, or: node test-client.js
