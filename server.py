@@ -1,14 +1,29 @@
 #!/usr/bin/env python3
 
 import socket
+import sys
 import threading
-import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 
 TCP_HOST = 'localhost'
-TCP_PORT = 7777
 HTTP_PORT = 3001
+
+def port_from_args(default):
+    """Optional --port N on the command line"""
+    args = sys.argv[1:]
+    if '--port' not in args:
+        return default
+    try:
+        port = int(args[args.index('--port') + 1])
+        if 1 <= port <= 65535:
+            return port
+    except (IndexError, ValueError):
+        pass
+    print("usage: --port <1-65535>")
+    sys.exit(1)
+
+TCP_PORT = port_from_args(7777)
 
 class HTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -28,21 +43,22 @@ def handle_client(client_socket, client_address):
     print(f"Client connected: {client_address[0]}:{client_address[1]}")
 
     try:
-        client_socket.send(b"Welcome to TCP Server on localhost:7777\n")
+        client_socket.sendall(f"Welcome to TCP Server on {TCP_HOST}:{TCP_PORT}\n".encode('utf-8'))
 
         while True:
             data = client_socket.recv(1024)
             if not data:
                 break
 
-            message = data.decode('utf-8').strip()
+            message = data.decode('utf-8', errors='replace').strip()
             print(f"Received from client: {message}")
 
             if message.lower() == 'quit':
+                client_socket.sendall(b"Bye\n")
                 break
 
             response = f"Echo: {message}\n"
-            client_socket.send(response.encode('utf-8'))
+            client_socket.sendall(response.encode('utf-8'))
 
     except ConnectionResetError:
         print("Socket error: Connection reset by peer")

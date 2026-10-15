@@ -1,7 +1,20 @@
 const net = require('net');
 
 const SERVER_HOST = 'localhost';
-const SERVER_PORT = 6666;
+
+// optional --port N on the command line
+function portFromArgs(defaultPort) {
+    const i = process.argv.indexOf('--port');
+    if (i === -1) return defaultPort;
+    const port = Number(process.argv[i + 1]);
+    if (!Number.isInteger(port) || port < 1 || port > 65535) {
+        console.log('usage: --port <1-65535>');
+        process.exit(1);
+    }
+    return port;
+}
+
+const SERVER_PORT = portFromArgs(6666);
 
 const client = new net.Socket();
 

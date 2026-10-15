@@ -5,7 +5,22 @@ import sys
 import threading
 
 SERVER_HOST = 'localhost'
-SERVER_PORT = 7777
+
+def port_from_args(default):
+    """Optional --port N on the command line"""
+    args = sys.argv[1:]
+    if '--port' not in args:
+        return default
+    try:
+        port = int(args[args.index('--port') + 1])
+        if 1 <= port <= 65535:
+            return port
+    except (IndexError, ValueError):
+        pass
+    print("usage: --port <1-65535>")
+    sys.exit(1)
+
+SERVER_PORT = port_from_args(7777)
 
 class TCPClient:
     def __init__(self):
@@ -43,7 +58,7 @@ class TCPClient:
     def send_message(self, message):
         """Send message to server"""
         try:
-            self.socket.send(message.encode('utf-8'))
+            self.socket.sendall(message.encode('utf-8'))
             if message.lower() == 'quit':
                 self.connected = False
         except Exception as e:

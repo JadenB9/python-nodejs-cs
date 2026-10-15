@@ -5,7 +5,20 @@ require('dotenv').config();
 
 const app = express();
 const HTTP_PORT = process.env.PORT || 3000;
-const TCP_PORT = 6666;
+
+// optional --port N on the command line
+function portFromArgs(defaultPort) {
+    const i = process.argv.indexOf('--port');
+    if (i === -1) return defaultPort;
+    const port = Number(process.argv[i + 1]);
+    if (!Number.isInteger(port) || port < 1 || port > 65535) {
+        console.log('usage: --port <1-65535>');
+        process.exit(1);
+    }
+    return port;
+}
+
+const TCP_PORT = portFromArgs(6666);
 
 app.use(cors());
 app.use(express.json());
@@ -17,11 +30,16 @@ app.get('/', (req, res) => {
 const tcpServer = net.createServer((socket) => {
     console.log(`Client connected: ${socket.remoteAddress}:${socket.remotePort}`);
 
-    socket.write('Welcome to TCP Server on localhost:6666\n');
+    socket.write(`Welcome to TCP Server on localhost:${TCP_PORT}\n`);
 
     socket.on('data', (data) => {
         const message = data.toString().trim();
         console.log(`Received from client: ${message}`);
+
+        if (message.toLowerCase() === 'quit') {
+            socket.end('Bye\n');
+            return;
+        }
 
         socket.write(`Echo: ${message}\n`);
     });
