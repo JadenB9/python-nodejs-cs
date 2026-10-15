@@ -5,7 +5,7 @@ client implemented twice, once in Node.js and once in Python, so I could
 compare how the two languages handle sockets.
 
 Both servers do the same thing — accept multiple clients, send a welcome
-line, echo anything the client sends, and tear down cleanly on `quit`.
+line, echo anything the client sends, and reply `Bye` and hang up on `quit`.
 
 ## Running it
 
@@ -13,18 +13,28 @@ line, echo anything the client sends, and tear down cleanly on `quit`.
 
 ```bash
 npm install
-node server.js      # listens on TCP 6666 (and an Express HTTP route on 3000)
+node server.js      # TCP on 6666, plus an Express HTTP route on 3000
 node client.js      # interactive client, or: node test-client.js
 ```
 
 ### Python version
 
 ```bash
-python3 server.py   # TCP 7777, HTTP 3001 — standard library only
-python3 client.py
+python3 server.py   # TCP on 7777, HTTP on 3001 — standard library only
+python3 client.py   # interactive client, or: python3 test-client.py
 ```
 
-You can run both servers at once on their own ports.
+You can run both servers at once on their own ports. Every script also
+takes `--port N` if the default is taken:
+
+```bash
+node server.js --port 6700
+node client.js --port 6700
+```
+
+`npm test` just syntax-checks the JS files. The GitHub Actions workflow
+does that plus a quick smoke test: start each server, run its test client,
+and check the echo came back.
 
 ## Notes
 

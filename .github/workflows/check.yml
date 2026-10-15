@@ -1,0 +1,37 @@
+name: check
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: syntax check
+        run: |
+          npm ci
+          npm test
+          python3 -m py_compile server.py client.py test-client.py
+
+      - name: node server smoke test
+        run: |
+          PORT=3000 node server.js --port 6666 &
+          sleep 1
+          node test-client.js --port 6666 | tee node.log
+          grep -q "Echo: Hello from test client!" node.log
+          kill %1
+
+      - name: python server smoke test
+        run: |
+          python3 server.py --port 7777 &
+          sleep 1
+          python3 test-client.py --port 7777 | tee py.log
+          grep -q "Echo: Hello from test client!" py.log
+          kill %1
