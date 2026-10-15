@@ -1,25 +1,19 @@
 {
-  "name": "networks",
+  "name": "python-nodejs-cs",
   "version": "1.0.0",
-  "description": "A Node.js Backend project created with Mode Terminal Navigator.",
-  "main": "index.js",
+  "description": "TCP echo server and client written twice, in Node.js and Python, for a networking class",
+  "private": true,
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "node --check server.js && node --check client.js && node --check test-client.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Jaden Butler",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
-    "express": "^5.1.0",
-    "helmet": "^8.1.0",
-    "morgan": "^1.10.1"
-  },
-  "devDependencies": {
-    "@types/node": "^24.5.1",
-    "nodemon": "^3.1.10",
-    "typescript": "^5.9.2"
+    "express": "^5.1.0"
   }
 }
